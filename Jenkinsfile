@@ -13,18 +13,19 @@ pipeline{
         stage('upload artifact'){
             steps{
                 script{
+                def mavenpom = readMavenPom file: 'pom.xml'
                 nexusArtifactUploader artifacts:
-                 [[artifactId: "${POM_ARTIFACTID}",
+                 [[artifactId: "${mavenPOM.artifactId}",
                   classifier: '',
-                   file: "target/${POM_ARTIFACTID}-${POM_VERSION}.${POM_PACKAGING}",
-                    type: "${POM_PACKAGING}"]],
+                   file: "target/${mavenPOM.artifactId}-${mavenPOM.version}.${mavenPOM.packaging}",
+                    type: "${mavenPOM.packaging}"]],
                      credentialsId: 'NexusID',
-                      groupId: "${POM_GROUPID}",
+                      groupId: "${mavenPOM.groupId}",
                        nexusUrl: '54.87.55.10:8081',
                         nexusVersion: 'nexus3',
                          protocol: 'http',
                           repository: 'biom',
-                           version: "${POM_VERSION}"
+                           version: "${mavenPOM.version}"
                   }          
             }
 
